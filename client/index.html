@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" ng-app="VotingApp">
+  <head>
+    <title>Voting App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--<link rel="stylesheet" href="/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="/css/bootstrap-responsive.min.css">-->
+    <link rel="stylesheet" href="css/style.css">
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    
+    </head>
+    <body  ng-controller="MainController">
+  <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#!">VOTING APP</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#!">Home</a></li>
+              <!-- <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Page 1-1</a></li>
+                  <li><a href="#">Page 1-2</a></li>
+                  <li><a href="#">Page 1-3</a></li>
+                </ul>
+              </li> -->
+              <li ng-click="getAllPolls()"><a href="#" >All Polls</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#!register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              <li><a href="#!login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+          
+          </div>
+      </nav>
+      <div class="container-fluid">
+          
+          <div ng-view></div> 
+            <!-- Poll -->
+            <!-- <poll items="userPoll.pollItems"></poll> -->
+            
+          </div>
+        <!--<div ng-controller="logoutController">-->
+        <!--      <a ng-click='logout()' class="btn btn-default">Logout</a>-->
+        <!--</div>-->
+
+          <footer>
+              <p class="copyright text-muted small footerText">Copyright &copy; Your Company 2017. All Rights Reserved</p>
+            </footer>
+            <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="js/controllers/MainController.js"></script>
+     <script src="js/services/services.js"></script>
+    <script src="js/controllers/authControllers.js"></script>
+    <!--<script src="js/directives/pollTemp.js"></script>-->
+   
+
+    <script src="js/scripts.js"></script>
+</body>
+</html>

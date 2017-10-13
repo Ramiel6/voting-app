@@ -1,0 +1,29 @@
+<form class="poll-cont">
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" class="form-control add-items-q" placeholder="Your Question" ng-model="$parent.question">
+        </div>
+    </div>
+        <div class="list-group" >
+            <div class="row list-group-item" ng-repeat="x in myItems">
+                <div class="col-md-6">
+                    {{x.value}}
+                </div>
+                <div  Class="col-md-1 add-items-close" ng-click="removeItem($index)">
+                    <!--<i class="fa fa-times" aria-hidden="true"></i>-->X
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-8">
+            <input class="form-control" placeholder="Add item" ng-model="$parent.addMe">
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-custom" ng-click="addItem()">Add</button>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-custom" ng-click="newPollSubmit()">Submit</button>
+        </div>
+    </div>
+    <p>{{errortext}}</p>
+</form>

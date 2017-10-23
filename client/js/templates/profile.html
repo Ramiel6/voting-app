@@ -1,0 +1,13 @@
+<container ng-show="user.google.token">
+    <p>
+        <strong>id</strong>: {{ user.google.id }}<br>
+        <strong>token</strong>: {{ user.google.token }}<br>
+        <strong>email</strong>: {{ user.google.email }}<br>
+        <strong>name</strong>: {{ user.google.name }}<br>
+    </p>
+
+    <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+</container>
+<container ng-hide="user.facebook.token">
+    <a href="/connect/facebook" class="btn btn-primary">Connect google</a>
+</container>

@@ -1,0 +1,7 @@
+/data/*
+/node_modules/*
+/.c9/*
+/test/*
+/old/*
+/configs/authConfig.js
+client/js/index.1.html

@@ -6,7 +6,7 @@
 
 
 
-<div  class="row my-polls" ng-repeat="item in userPoll | filter:search" ng-click="getSelected($index)">
+<div  class="row my-polls" ng-repeat="item in allPolls | filter:search" ng-click="getSelectedAll($index)">
         <!--<a href="#!selected" ></a> -->
         <div class="col-md-12">
             {{item.question}} 

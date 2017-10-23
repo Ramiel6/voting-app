@@ -1,4 +1,3 @@
-//
 // # SimpleServer
 //
 // A simple chat server using Socket.IO, Express, and Async.
@@ -12,13 +11,15 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
+// var LocalStrategy = require('passport-local').Strategy;
 var cookieParser = require('cookie-parser');
-var routes = require('./routes.js');
-var authRoutes = require('./authRoutes.js');
-var Account = require('./account');
+var routes = require('./routes/routes.js');
+var authRoutes = require('./routes/authRoutes.js');
+var Account = require('./configs/account.js');
+var vote = require('./configs/pollModel.js');
 
-
+// passportConfig;
 
 //
 // ## SismpleServer `SimpleServer(obj)`
@@ -29,24 +30,59 @@ var Account = require('./account');
 var app = express();
 var server = http.createServer(app);
 // var io = socketio.listen(server);
+app.use(cookieParser('HardSecret')); // cookie parser must use the same secret as express-session.
+const cookieExpirationDate = new Date();
+const cookieExpirationDays = 365;
+cookieExpirationDate.setDate(cookieExpirationDate.getDate() + cookieExpirationDays);
+
+app.use(session({
+	secret: 'HardSecret', // must match with the secret for cookie-parser
+	resave: true,
+	saveUninitialized: true,
+	cookie: {
+	    // httpOnly: true,
+	    expires: cookieExpirationDate // use expires instead of maxAge
+	}
+ } ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-}));
 
 app.use(express.static(path.resolve(__dirname, 'client')));
 app.use(passport.initialize());
 app.use(passport.session());
-// passport config
+require('./configs/PassportConfig.js')(app, passport, Account);
+// app.enable('trust proxy');
+// app.use(session({
+//     secret: 'HardSecret',
+//     resave: true,
+//     saveUninitialized: true,
+//     cookie: {
+// 	    httpOnly: true,
+// 	    expires: cookieExpirationDate // use expires instead of maxAge
+// 	}
+// }));
+// app.get('/', function(req, res) {
+//     res.sendfile('./test/login.html');
+// });
 
-// passport.use(new LocalStrategy(Account.authenticate()));
-passport.use(Account.createStrategy());
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+
+
+
+// passport config
+// var mongoose = require('mongoose');
+// var Schema = mongoose.Schema;
+// var passportLocalMongoose = require('passport-local-mongoose');
+
+// var Account = new Schema({
+//     username: String,
+//     password: String
+// });
+
+// Account.plugin(passportLocalMongoose);
+// var Accounts =  mongoose.model('Account', Account);
+
+
 var url = 'mongodb://'+ process.env.IP +'/votingapp';
 mongoose.Promise = global.Promise;
 mongoose.connect(url,{ useMongoClient: true });
@@ -83,8 +119,10 @@ mongoose.connect(url,{ useMongoClient: true });
 // });
 
 //routes
-routes(app);
 authRoutes(app, passport, Account);
+routes(app,vote,passport);
+
+
 
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){

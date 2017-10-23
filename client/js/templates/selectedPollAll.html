@@ -8,16 +8,16 @@
         <div class="row">
           <div class="col-md-12">
         <div class="poll-cont">
-            <h3><i class="fa fa-tag" aria-hidden="true"></i> {{selectedPoll.question}}</h3>
+            <h3><i class="fa fa-tag" aria-hidden="true"></i> {{selectedPollAll.question}}</h3>
             <hr class="style14">
-            <label  ng-repeat="item in selectedPoll.pollItems" >
-              <input type="radio" class="option-input radio" ng-value="item.value" ng-model="$parent.pollInput" />
+            <label  ng-repeat="item in selectedPollAll.pollItems" >
+              <input type="radio" class="option-input radio" ng-value="item.value" ng-model="$parent.pollInputAll" />
               &nbsp;{{item.value}}
             </label>
             <hr class="style14">
             <div class="row">
               <div class="col-md-4">
-                <button type="button" class="btn btn-custom" ng-click="voteSubmit()">Vote</button>
+                <button   type="button" class="btn btn-custom" ng-click="voteSubmitAll()">Vote</button>
               </div>
               <div class="col-md-4 see-result">
                 <a  href="#">see result</a>

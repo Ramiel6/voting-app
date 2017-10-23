@@ -6,9 +6,9 @@
   "repository": "",
   "author": "Mostafa Eweda <mo.eweda@gmail.com>",
   "scripts": {
-  "start": "node ./bin/www",
-  "test": "make test"
- },
+    "start": "node ./bin/www",
+    "test": "make test"
+  },
   "dependencies": {
     "async": "~0.2.8",
     "cookie-parser": "^1.4.3",
@@ -17,6 +17,8 @@
     "mongodb": "^2.2.31",
     "mongoose": "^4.12.1",
     "passport": "^0.4.0",
+    "passport-github2": "^0.1.11",
+    "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.2.1",
     "socket.io": "~0.9.14"

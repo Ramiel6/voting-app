@@ -51,6 +51,11 @@ app.config(function($routeProvider) {
       controller: 'registerController',
       access: {restricted: false}
     })
+    .when('/profile', {
+      templateUrl: 'js/templates/profile.html',
+      controller: 'profileController',
+      access: {restricted: true}
+    })
     .otherwise({
         redirectTo: '/',
         access: {restricted: false}

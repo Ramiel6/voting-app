@@ -1,21 +1,41 @@
-<div class="col-md-4">
-  <h1>Login</h1>
+<div class="col-md-7 col-md-offset-2">
+  
+  <h1 class="text-center">Login</h1>
   <div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
-  <form class="form" ng-submit="login()">
+  <form class="form" ng-submit="login()" name="form">
     <div class="form-group">
-      <label>Eamil</label>
-      <input type="text" class="form-control" name="email" ng-model="loginForm.username" required>
-    </div>
+      <label>Email address</label>
+      <div class="row"> 
+        <div class="col-md-8">
+          <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" ng-model="loginForm.username" required>
+        </div>
+        <div class="col-md-3">
+          <small id="emailHelp" class="help-block text-danger" ng-show="form.email.$error.required">Required!</small>
+          <small id="emailHelp" class="help-block text-danger" ng-show="form.email.$error.email">Invalid email address!</small>
+        </div>
+      </div>
+      </div>
+    
     <div class="form-group">
       <label>Password</label>
-        <input type="password" class="form-control" name="password" ng-model="loginForm.password" required>
-      </div>
+      <div class="row">
+          <div class="col-md-8">  
+          <input type="password" class="form-control" name="password" ng-model="loginForm.password" required>
+          </div>
+          <div class="col-md-3">
+          <small id="passHelp" class="help-block text-danger" ng-show="form.password.$error.required">Required!</small>
+          </div>
+        </div>  
+        </div>
       <div>
-        <button type="submit" class="btn btn-default" ng-disabled="disabled">Login</button>
+        <button type="submit" class="btn btn-custom" 
+        ng-disabled="disabled || form.email.$error.required || form.email.$error.email || form.password.$error.required">Login</button>
       </div>
   </form>
-  <hr>
-  <h3>Or login with:</h3>
- <a href="/auth/google" target="_self" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
-    <a href="/auth/github" target="_self"  class="btn btn-default">Github</a>
-</div>
+  <!-- <hr> -->
+  <h3 class="text-center">Or login with:</h3>
+ <div class="text-center">
+  <a href="/auth/google" target="_self" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
+  <a href="/auth/github" target="_self"  class="btn btn-default">Github</a>
+ </div>
+  </div>

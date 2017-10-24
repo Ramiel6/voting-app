@@ -1,11 +1,12 @@
-<form class="poll-cont">
+<form class="new-poll">
+    <h3 class="style3"><i class="fa fa-plus" aria-hidden="true"></i> New Poll</h3>
     <div class="row">
         <div class="col-md-12">
             <input type="text" class="form-control add-items-q" placeholder="Your Question" ng-model="$parent.question">
         </div>
     </div>
         <div class="list-group" >
-            <div class="row list-group-item" ng-repeat="x in myItems">
+            <div class="row list-group-item new-item" ng-repeat="x in myItems">
                 <div class="col-md-6">
                     {{x.value}}
                 </div>

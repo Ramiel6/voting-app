@@ -17,7 +17,7 @@ app.get("/", function (request, response) {
   response.sendFile(path + '/client/index.html');
 });
 
-app.post('/newpoll', function(request, response) {
+app.post('/newpoll', isLoggedIn,function(request, response) {
   response.writeHead(200, { 'Content-Type': 'application/json' });
   // console.log("inti body")
   // console.log(request.body)
@@ -39,7 +39,7 @@ app.post('/newpoll', function(request, response) {
   
 });
 
-app.get("/getmypolls", function (request, response) {
+app.get("/getmypolls", isLoggedIn,function (request, response) {
   response.writeHead(200, { 'Content-Type': 'application/json' });
   if(request.query.user){
   var id = request.query.user;
@@ -128,27 +128,59 @@ app.put('/updatepoll', function(request, response) {
  
 
 });
-app.post("/testfind", function (request, response) {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-   var post = request.body;
-  vote.find({pollItems:{$elemMatch:{value:post.voteValue}}}).exec(function(err, data) {
-      if (err) throw err;
-      if(data){
-        console.log(data);
-        response.end(JSON.stringify(data));
-      }
-      else{
-        response.end("not found");
-      }
-      //console.log(JSON.stringify(data));
-    // response.end("hi");
-     
-    });
-  
+app.post('/deletepoll', function(request, response) {
+  var id = request.body.id || undefined
+  // console.log(id)
+  // console.log(request.body)
+  if(id){
+  vote.find({ '_id':id }).remove().exec(function(err){
+     if (err){ 
+       console.log(err)
+       return response.status(500).end('error')
+       
+     };
+     response.status(200).end('deleted')
+  });
+  }
 });
+app.post('/getonepoll', function(request, response) {
+   var id = request.body.id || undefined
+  if(id){
+  vote.find({ '_id':id }).exec(function(err,data){
+    if (err){ 
+       console.log(err)
+       return response.status(500).end('error')
+       
+     };
+     console.log(data)
+     response.status(200).json(data[0])
+    
+  })
+  }
+  
+})
+// app.post("/testfind", function (request, response) {
+//   response.writeHead(200, { 'Content-Type': 'application/json' });
+//   var post = request.body;
+//   vote.find({pollItems:{$elemMatch:{value:post.voteValue}}}).exec(function(err, data) {
+//       if (err) throw err;
+//       if(data){
+//         console.log(data);
+//         response.end(JSON.stringify(data));
+//       }
+//       else{
+//         response.end("not found");
+//       }
+//       //console.log(JSON.stringify(data));
+//     // response.end("hi");
+     
+//     });
+  
+// });
 
-app.get('*', function(req, res) {
-    res.redirect('/');
+app.get('*', function(request, response) {
+ 
+ response.sendFile(path + '/client/index.html');
 });
 
 

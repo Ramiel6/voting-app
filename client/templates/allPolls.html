@@ -1,4 +1,4 @@
-
+<loading-dir ng-show="loadingShow"></loading-dir>
 <div class="input-group search">
     <div class="input-group-addon"><i class="fa fa-search"></i></div>
     <input type="text" class="form-control " placeholder="Search" ng-model="search">
@@ -6,10 +6,11 @@
 
 
 
-<div  class="row my-polls" ng-repeat="item in allPolls | filter:search" ng-click="getSelectedAll($index)">
+<div  class="row my-polls"  ng-repeat="item in allPolls | filter:search" ng-controller="selectedController" ng-click="getSelected($index)">
         <!--<a href="#!selected" ></a> -->
-        <div class="col-md-12">
+        <div  class="col-md-12 poll-col">
             {{item.question}} 
         </div>
      
      </div>
+

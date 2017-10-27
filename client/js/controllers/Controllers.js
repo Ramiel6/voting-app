@@ -12,25 +12,27 @@ google.charts.setOnLoadCallback(drawChart);
      
       var chart = new google.visualization.PieChart(myElement);
       chart.draw(chartData, options);
-    }
+    };
 
 var app = angular.module("VotingApp", ["ngRoute",'cgNotify']);
 app.config(['$locationProvider','$httpProvider', function($locationProvider,$httpProvider){
-    $locationProvider.html5Mode(true);
+    // $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     $httpProvider.defaults.withCredentials = true;
+    // $locationProvider.html5Mode(true);
      
     
 }]);
 app.controller("MainController",
-    function($scope,$http,$location,sharedProperties,AuthService,notify,$interval,$document) {
+    function($scope,$http,$location,sharedProperties,AuthService,notify,$interval, $timeout) {
     // $location.path("/")
-   
+   $scope.loadingShow=false;
     // $scope.isDisabled = sharedProperties.getIsDisabled()
      $scope.$watch(function(scope) {
          return scope.isDisabled =AuthService.isLoggedIn();
      });
     
 $scope.getAllPolls = function(){
+      $scope.loadingShow=true;
       $http({
         method : "GET",
         url : "/getallpolls"
@@ -40,31 +42,79 @@ $scope.getAllPolls = function(){
        console.log("working");
     //   console.log(response.data)
         // $window.location.href= "#!all"
-        $location.url('/all');
+        $timeout(function(){
+        //  $location.url('/all');
+        $scope.loadingShow=false;
+        },100);
+        
     }, function myError(response) {
         console.log("error");
+        $scope.loadingShow=false;
     });
   };
+  $scope.getAllPolls();
     // $scope.setSelected = function(selected) {
     //   //https://stackoverflow.com/users/527968/liviu-t
     //     $scope.selected = selected; 
     //   };
-      $scope.getSelectedAll = function(selected) {
-        $scope.selectedPollAll = $scope.allPolls[selected];
+      
+});
+app.controller('selectedController',
+  function (AuthService,$http,$scope,notify,$location,$interval, $timeout,$rootScope,$routeParams,$route) {
+    //  $scope.deleteShow = AuthService.isLoggedIn()
+      $rootScope.selectedPoll;
+      $scope.getSelected = function(selected) {
+        if($scope.allPolls){
+            $rootScope.selectedPoll = $scope.allPolls[selected];
+        } 
+        else if ($scope.userPoll){
+             $rootScope.selectedPoll =  $scope.userPoll[selected];
+             
+        }
+         $scope.drawPoll();
+      };
+      if((!$scope.allPolls || !$scope.userPoll) && !$rootScope.selectedPoll){
+          console.log($rootScope.selectedPoll);
+        //   $scope.drawPoll()
+    //   }
+    //   else{
+         var id = $routeParams.id;
+        var data = {id: id};
+        console.log(data);
+        $http({
+            method : "Post",
+            url : "/getonepoll",
+            data: data
+        }).then(function mySuccess(response) {
+          console.log(response.data);
+            if(response.data.err){
+                 notify({message:'error',duration:3000,classes:'alert-danger'});
+            }else{
+                $rootScope.selectedPoll = response.data;
+                 $scope.drawPoll();
+                 console.log("working");
+            }
+
+        }, function myError(response) {
+             console.log("error");
+            //  notify({message:'Somthing went wrong',duration:3000,classes:'alert-danger'});
+        });
+      }
+       $scope.drawPoll = function(){ 
         var chartData = function(){
             var arr = [['Task', 'Hours per Day']];
-            for(var i=0; i < $scope.selectedPollAll.pollItems.length; i++){
+            for(var i=0; i < $rootScope.selectedPoll.pollItems.length; i++){
                 arr.push(
-                    [$scope.selectedPollAll.pollItems[i]['value'],$scope.selectedPollAll.pollItems[i]['votes']]
+                    [$rootScope.selectedPoll.pollItems[i]['value'],$rootScope.selectedPoll.pollItems[i]['votes']]
                     );
             }
             return arr;
         };
     
-        var title =  $scope.selectedPollAll.question;
+        var title =  $rootScope.selectedPoll.question;
        
         console.log(chartData());
-        $location.url('/selectedall');
+        $location.url('/poll/' + $rootScope.selectedPoll._id);
         var stop;
         stop = $interval(function() {
             if (angular.element('#piechart').length) {
@@ -82,23 +132,24 @@ $scope.getAllPolls = function(){
             stop = undefined;
           }
         };
-      };
-    $scope.getStatus =function() {
-         AuthService.getUserStatus();
-    };
-    
-    $scope.voteSubmitAll = function(){
+        
+    // $scope.getStatus =function() {
+    //      AuthService.getUserStatus();
+    // };
+       };
+    $scope.voteSubmit = function(){
     var result;
+    console.log($scope.pollInput)
     if(AuthService.isLoggedIn()){
         result = {
-            voteId: $scope.selectedPollAll._id,
-            voteValue: $scope.pollInputAll,
+            voteId: $rootScope.selectedPoll._id,
+            voteValue: $scope.pollInput,
             voter: AuthService.userInfo()._id,
         };
     } else {
         result = {
-            voteId: $scope.selectedPollAll._id,
-            voteValue: $scope.pollInputAll,
+            voteId: $rootScope.selectedPoll._id,
+            voteValue:$scope.pollInput,
             voter: 'ip'
         };
     }
@@ -115,30 +166,21 @@ $scope.getAllPolls = function(){
             notify({message:'Vote submited Successfully!',duration:3000,classes:'alert-success'});
        }
        console.log("working");
-      
+      $location.url('/mypolls');
+        // $route.reload();
     }, function myError(response) {
         console.log("error");
+        notify({message:'Somthing went wrong',duration:3000,classes:'alert-danger'});
     });
    
    };
-});
+  });
 
-app.controller('homeController', ['$scope','$location','$rootScope','$http','AuthService','notify','$interval',
-  function ($scope, $location,$rootScope,$http,AuthService,notify,$interval) {
-    //   $scope.userPoll = []
-    //  var getUserPolls = function(){
-    //     //   $scope.userPoll = PollService.userPoll
-    //     //  console.log($scope.userPoll)
+app.controller('homeController', ['$scope','$location','$rootScope','$http','AuthService','notify','$interval','$routeParams','$route',
+  function ($scope, $location,$rootScope,$http,AuthService,notify,$interval,$routeParams,$route) {
     
-    // // Call the async method and then do stuff with what is returned inside our own then function
-    // PollService.async().then(function(data) {
-    //     // $location.url('/mypolls');
-    //     $scope.userPoll = data;
-    //     console.log($scope.userPoll)
-        
-    //     });
-    // };
     var getUserPolls = function(){
+        $scope.loadingShow=true;
         var user = AuthService.userInfo() || "";
         $http({
         method : "GET",
@@ -148,79 +190,41 @@ app.controller('homeController', ['$scope','$location','$rootScope','$http','Aut
        console.log("working");
        $scope.userPoll = response.data;
     //   console.log(response.data)
-        // $window.location.href= "#!all"
+       $scope.loadingShow=false;
     }, function myError(response) {
         console.log("error");
+        $scope.loadingShow=false;
     });
     };
     getUserPolls();
-  $scope.SelectedUserPoll = function(selected) {
-        $rootScope.selectedPoll = $scope.userPoll[selected];
-        // $window.location.href= "#!selected"
-        var chartData = function(){
-            var arr = [['Task', 'Hours per Day']];
-            for(var i=0; i < $rootScope.selectedPoll.pollItems.length; i++){
-                arr.push(
-                    [$rootScope.selectedPoll.pollItems[i]['value'],$rootScope.selectedPoll.pollItems[i]['votes']]
-                    );
+    
+    $scope.deletePoll = function(selected){
+        $scope.selectedPollDel = $scope.userPoll[selected];
+        var data = {id: $scope.selectedPollDel._id};
+        console.log(data);
+        $http({
+            method : "POST",
+            url : "/deletepoll",
+            data: data
+        }).then(function mySuccess(response) {
+        //   console.log(response.data);
+            console.log("deleted");
+            if(response.data.err){
+                 notify({message:response.data.err,duration:3000,classes:'alert-danger'});
+            }else{
+                 notify({message:'Vote deleted Successfully!',duration:3000,classes:'alert-success'});
             }
-            return arr;
-        };
-        var title =  $rootScope.selectedPoll.question;
-        $location.url('/selected');
-        var stop;
-        stop = $interval(function() {
-            if (angular.element('#piechart').length) {
-               $scope.stopInterval();
-                var myElement = angular.element('#piechart')['0'];
-                drawChart(chartData(), title, myElement);
-                console.log(myElement);
-                console.log('found');
-            } 
-          }, 100);
-        
-        $scope.stopInterval= function() {
-          if (angular.isDefined(stop)) {
-            $interval.cancel(stop);
-            stop = undefined;
-          }
-        };
-      }; 
-     
-    $scope.voteSubmit = function(){
-    var result;
-    if(AuthService.isLoggedIn()){
-        result = {
-            voteId: $scope.selectedPoll._id,
-            voteValue: $scope.pollInput,
-            voter: AuthService.userInfo()._id,
-        };
-     
-    console.log(result);
-    $http({
-        method : "PUT",
-        url : "/updatepoll",
-        data: result
-    }).then(function mySuccess(response) {
-       console.log(response.data);
-       if(response.data.err){
-            notify({message:response.data.err,duration:3000,classes:'alert-danger'});
-       }else{
-            notify({message:'Vote submited Successfully!',duration:3000,classes:'alert-success'});
-       }
-       console.log("working");
-      
-    }, function myError(response) {
-        console.log("error");
-    });
-    }
-   };
+            // $location.url('/mypolls');
+            $route.reload();
+        }, function myError(response) {
+             console.log("error");
+             notify({message:'Somthing went wrong',duration:3000,classes:'alert-danger'});
+        });
+    };
+
       
   }]);
-//   app.controller('allPollsController',['AuthService','$scope','$http',
-//   function (AuthService,$http,$scope) {
-      
-//   }]);
+
 
 app.controller('newPollController',
   function (AuthService,$http,$scope,notify,$location) {
@@ -271,6 +275,7 @@ app.controller('newPollController',
        },function(response){
         console.log(response);
         console.log("error");
+        notify({message:'Somthing went wrong',duration:3000,classes:'alert-danger'});
        });
     }
    };
@@ -279,7 +284,7 @@ app.controller('newPollController',
 
 app.controller('profileController',
   function ($scope,AuthService) {
-     $scope.user = AuthService.userInfo()
+     $scope.user = AuthService.userInfo();
       
   });
         

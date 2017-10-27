@@ -1,0 +1,31 @@
+<div class="row header">
+        <div class="col-md-12 header-col">
+          <h1>Dashboard</h1>
+          <a href="/new" class="btn btn-custom">New Poll</a>
+          <a href="/mypolls" class="btn btn-custom">My Polls</a>
+        </div>
+      </div>
+        <div class="row poll-cont">
+          <div class="col-md-5">
+        <!--<div class="poll-cont">-->
+            <h3><i class="fa fa-tag" aria-hidden="true"></i> {{selectedPollAll.question}}</h3>
+            <hr class="style14">
+            <label  ng-repeat="item in selectedPoll.pollItems" >
+              <input type="radio" class="option-input radio" ng-value="item.value" ng-model="$parent.pollInputAll" />
+              &nbsp;{{item.value}}
+            </label>
+            <hr class="style14">
+            <div class="row">
+              <div class="col-md-5">
+                <button   type="button" class="btn btn-custom" ng-click="voteSubmitAll()">Vote</button>
+              </div>
+              <!--<div class="col-md-4 see-result">-->
+              <!--  <a  href="#">see result</a>-->
+              <!--</div>-->
+            </div>
+          <!--</div>-->
+      </div>
+      <div class="col-md-6">
+        <div id="piechart">hi</div>
+      </div>
+    </div>

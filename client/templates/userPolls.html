@@ -1,0 +1,22 @@
+<loading-dir ng-show="loadingShow"></loading-dir>
+<div class="row header">
+        <div class="col-md-12 header-col">
+          <h1>Dashboard</h1>
+          <a href="#!new" class="btn btn-custom">New Poll</a>
+          <!-- <button type="button" class="btn btn-custom">My Polls</button> -->
+        </div>
+      </div>
+       <div  class="row my-polls" ng-repeat="item in userPoll">
+            
+               <div class="col-md-10 poll-col" ng-controller="selectedController" ng-click="getSelected($index)">
+                   <!--<a href="#!selected" > </a>-->
+               {{item.question}} 
+           </div>
+           
+           <div class="col-md-1 poll-col-btn">
+                <button type"button" class="btn btn-danger" ng-click="deletePoll($index)">Delete</button>
+            </div>
+       
+        </div>
+     
+       

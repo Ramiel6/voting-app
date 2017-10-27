@@ -140,7 +140,7 @@ app.get('/auth/google/callback',function(req, res,next) {
 });
 
 app.get("/loginfailed", function (request, response) {
-  response.sendFile(process.cwd() + '/client/js/templates/loginFailed.html');
+  response.sendFile(process.cwd() + '/client/templates/loginFailed.html');
 });
 
 

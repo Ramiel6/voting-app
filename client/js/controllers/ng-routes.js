@@ -1,44 +1,44 @@
-app.config(function($routeProvider) {
+app.config(function($routeProvider,$locationProvider) {
     $routeProvider
     .when("/", {
-        templateUrl : "js/templates/main.html",
+        templateUrl : "templates/main.html",
         //controller: 'homeController',
         access: {restricted: false}
 
     })
     .when("/new", {
-        templateUrl : "js/templates/new.html",
+        templateUrl : "templates/new.html",
         controller: 'newPollController',
         access: {restricted: true}
 
     })
     .when("/mypolls", {
-        templateUrl : "js/templates/userPolls.html",
+        templateUrl : "templates/userPolls.html",
         controller: 'homeController',
         access: {restricted: true}
     })
-    .when("/selected", {
-        templateUrl : "js/templates/selectedPoll.html",
-        controller: 'homeController',
-         access: {restricted: true}
-    })
-    .when("/selectedall", {
-        templateUrl : "js/templates/selectedPollAll.html",
-         controller: 'MainController',
+    // .when("/selected/:id", {
+    //     templateUrl : "js/templates/selectedPoll.html",
+    //     controller: 'homeController',
+    //      access: {restricted: true}
+    // })
+    .when("/poll/:id", {
+        templateUrl : "templates/selectedPoll.html",
+         controller: 'selectedController',
          access: {restricted: false}
     })
     .when("/home", {
-        templateUrl : "js/templates/main.html",
+        templateUrl : "templates/main.html",
         //controller: 'homeController',
          access: {restricted: false}
     })
     .when("/all", {
-        templateUrl : "js/templates/allPolls.html",
-        // controller: 'MainController',
+        templateUrl : "templates/allPolls.html",
+        controller: 'MainController',
          access: {restricted: false}
     })
     .when('/login', {
-      templateUrl: 'js/templates/login.html',
+      templateUrl: 'templates/login.html',
       controller: 'loginController',
       access: {restricted: false}
     })
@@ -47,12 +47,12 @@ app.config(function($routeProvider) {
       access: {restricted: false}
     })
     .when('/register', {
-      templateUrl: 'js/templates/register.html',
+      templateUrl: 'templates/register.html',
       controller: 'registerController',
       access: {restricted: false}
     })
     .when('/profile', {
-      templateUrl: 'js/templates/profile.html',
+      templateUrl: 'templates/profile.html',
       controller: 'profileController',
       access: {restricted: true}
     })
@@ -60,6 +60,7 @@ app.config(function($routeProvider) {
         redirectTo: '/',
         access: {restricted: false}
       });
+    //   $locationProvider.html5Mode(true);
 });
 // app.run(['$rootScope', '$location', function($rootScope,$location) {
 //     $rootScope.$on('$routeChangeStart', function (event, next, current) {

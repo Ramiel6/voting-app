@@ -3,30 +3,35 @@
     <div class="card" ng-show="user.local.email">
         <h3 class="style2"><i class="fa fa-floppy-o local-color" aria-hidden="true"></i> Local</h3>
         <p>
-            <strong>name</strong>: user1{{ user.local.name }}<br>
-            <strong>id</strong>: user1{{ user.local.id }}<br>
-            <strong>token</strong>: aaa{{ user.local.token }}<br>
-            <strong>email</strong>: aaa@aa.com{{ user.local.email }}<br>
+            <!--<strong>name</strong>:{{ user.local.name }}<br>-->
+            <!--<strong>id</strong>: {{ user.local.id }}<br>-->
+            <!--<strong>token</strong>: {{ user.local.token }}<br>-->
+            <strong>email</strong>: {{ user.local.email }}<br>
             
         </p>
     </div>
     <div class="card" ng-show="user.google.token">
         <h3 class="style2"><i class="fa fa-google-plus-square google-color" aria-hidden="true"></i> Google+</h3>
         <p>
+            <strong>name</strong>: {{ user.google.name }}<br>
+            <strong>email</strong>: {{ user.google.email }}<br>
             <strong>id</strong>: {{ user.google.id }}<br>
             <strong>token</strong><span class="token-max">: {{ user.google.token }}</span><br>
-            <strong>email</strong>: {{ user.google.email }}<br>
-            <strong>name</strong>: {{ user.google.name }}<br>
         </p>
     </div>
     <div class="card" ng-show="user.github.token">
         <h3 class="style2"><i class="fa fa-github github-color" aria-hidden="true"></i> Github</h3>
         <!-- <hr class="style14"> -->
         <p>
+            <strong>name</strong>: {{ user.github.name }}<br>
+            <strong>email</strong>: {{ user.github.email }}<br>
             <strong>id</strong>: {{ user.github.id }}<br>
             <strong>token</strong>: {{ user.github.token }}<br>
-            <strong>email</strong>: {{ user.github.email }}<br>
-            <strong>name</strong>: {{ user.github.name }}<br>
         </p>
     </div>
+    <h3 class="text-center" ng-show="!user.github.token || !user.github.token">Connect with soical account:</h3>
+     <div class="text-center">
+      <a ng-show="!user.github.token" href="/auth/google" target="_self" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
+      <a ng-show="!user.google.token" href="/auth/github" target="_self"  class="btn btn-default">Github</a>
+     </div>
 </div>

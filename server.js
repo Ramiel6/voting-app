@@ -45,10 +45,11 @@ app.use(session({
 	}
  } ));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(express.static(path.resolve(__dirname, 'client')));
+app.use('/css',express.static(path.join(__dirname, '/client/css')));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./configs/PassportConfig.js')(app, passport, Account);
@@ -121,7 +122,12 @@ mongoose.connect(url,{ useMongoClient: true });
 //routes
 authRoutes(app, passport, Account);
 routes(app,vote,passport);
-
+// app.get('*', function(request, response) {
+//     // response.redirect('/');
+//     // response.setHeader('Content-Type', 'text/css');
+//      response.sendFile(path.join(__dirname + '/client','index.html'));
+    
+// });
 
 
 

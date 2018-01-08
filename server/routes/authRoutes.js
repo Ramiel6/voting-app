@@ -10,6 +10,12 @@ app.post('/register', function(req, res, next) {
     if (!req.body.email || !req.body.password) {
         return res.status(400).json({ err: 'Email and Password required' });
     }
+    else if ( req.body.email.length > 128 || req.body.password.length > 128 ) {
+        return res.status(400).json({ err: 'Values are too long!' });
+    }
+    else if ( !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(req.body.email) ) {
+        return res.status(400).json({ err: 'Invaild email address!' });
+    }
     passport.authenticate('local-signup', function(err, Account, info) {
         if (err) { 
             return res.status(500).json({err: err});
@@ -27,6 +33,15 @@ app.post('/register', function(req, res, next) {
 });
 
 app.post('/login', function(req, res, next) {
+  if (!req.body.username || !req.body.password) {
+        return res.status(400).json({ err: 'Email and Password required' });
+    }
+  else if ( req.body.username.length > 128 || req.body.password.length > 128 ) {
+        return res.status(400).json({ err: 'Values are too long!' });
+    }
+  else if ( !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(req.body.username) ) {
+        return res.status(400).json({ err: 'Invaild email address!' });
+    }
   passport.authenticate('local-login', function(err, myUser, info) {
     if (err) {
       return next(err);

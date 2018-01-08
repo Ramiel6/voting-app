@@ -1,5 +1,5 @@
 <div class="col-md-7 col-md-offset-2">
-  <h1><span class="fa fa-sign-in"> Sing Up</h1>
+  <h1 class="text-center"><span class="fa fa-sign-in"> Sing Up</h1>
   <div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
   <form class="form"  name="rForm" ng-submit="register()">
     <div class="form-group">
@@ -32,6 +32,8 @@
       </div>
   </form>
   <hr>
-  <p>Already have an account? <a href="/login">Login</a></p>
+  <div class="text-center">
+    <p>Already have an account? <a href="/login">Login</a></p>
     <p>Or return to <a href="/">home page</a>.</p>
+  </div>
 </div>

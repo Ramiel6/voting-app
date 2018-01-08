@@ -79,12 +79,12 @@ app.controller('selectedController',
     //   }
     //   else{
          var id = $routeParams.id;
-        var data = {id: id};
-        console.log(data);
+        // var data = {id: id};
+        // console.log(data);
         $http({
-            method : "Post",
-            url : "/getonepoll",
-            data: data
+            method : "GET",
+            url : "/getonepoll/" + id,
+            
         }).then(function mySuccess(response) {
           console.log(response.data);
             if(response.data.err){
@@ -200,12 +200,13 @@ app.controller('homeController', ['$scope','$location','$rootScope','$http','Aut
     
     $scope.deletePoll = function(selected){
         $scope.selectedPollDel = $scope.userPoll[selected];
-        var data = {id: $scope.selectedPollDel._id};
-        console.log(data);
+        // var data = {id: $scope.selectedPollDel._id};
+        // console.log(data);
+        var id = $scope.selectedPollDel._id
         $http({
-            method : "POST",
-            url : "/deletepoll",
-            data: data
+            method : "DELETE",
+            url : "/deletepoll/" + id,
+            // data: data
         }).then(function mySuccess(response) {
         //   console.log(response.data);
             console.log("deleted");

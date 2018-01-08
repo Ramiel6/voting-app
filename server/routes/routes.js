@@ -23,6 +23,9 @@ app.post('/newpoll', isLoggedIn,function(request, response) {
   // console.log(request.body)
   //https://stackoverflow.com/questions/4295782/how-do-you-extract-post-data-in-node-js
   var post = request.body;
+  if (!post) {
+    return response.status(400).json({error: 'Please send vaild data!'});
+  }
   // Too much POST data, kill the connection!
   // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
   if (post.length > 1e6){
@@ -33,7 +36,7 @@ app.post('/newpoll', isLoggedIn,function(request, response) {
     if (err) throw err;
     // saved!
     console.log(JSON.stringify(post));
-    response.end(JSON.stringify(post));
+    response.status(200).end(JSON.stringify(post));
   });
   
   
@@ -103,16 +106,19 @@ app.put('/updatepoll', function(request, response) {
   if (post.length > 1e6){
       request.connection.destroy();
   }
+  if(!post){
+    return response.status(400).json({error: 'Please send vaild data!'});
+  }
   if(post.voter == 'ip'){
-    voter = request.ip
+    voter = request.ip;
   }else{
-    voter = post.voter
+    voter = post.voter;
   }
   vote.find({'_id':post.voteId,voters:voter}).exec(function (err,result) {
     if (err) throw err;
     // console.log(result)
     if(result.length > 0){
-      return response.json({err: 'already voted'})
+      return response.json({err: 'already voted'});
     }else{
       vote.update({'_id':post.voteId,'pollItems.value':post.voteValue},{
         $inc:{'pollItems.$.votes': 1},
@@ -124,41 +130,54 @@ app.put('/updatepoll', function(request, response) {
       response.end(JSON.stringify(data));
     });
     }
-  })
+  });
  
 
 });
-app.post('/deletepoll', function(request, response) {
-  var id = request.body.id || undefined
-  // console.log(id)
+app.delete('/deletepoll/:id', isLoggedIn, function(request, response) {
+  var id = request.params.id || undefined;
+  console.log(id)
   // console.log(request.body)
   if(id){
   vote.find({ '_id':id }).remove().exec(function(err){
      if (err){ 
-       console.log(err)
-       return response.status(500).end('error')
+       console.log(err);
+       return response.status(500).end('error');
        
-     };
-     response.status(200).end('deleted')
+     }
+     response.status(200).end('deleted');
   });
+  }else{
+    return response.status(400).json({error: 'Please send vaild data!'});
   }
 });
-app.post('/getonepoll', function(request, response) {
-   var id = request.body.id || undefined
+app.get('/getonepoll/:id', function(request, response) {
+   var id = request.params.id || undefined;
   if(id){
   vote.find({ '_id':id }).exec(function(err,data){
     if (err){ 
-       console.log(err)
-       return response.status(500).end('error')
+       console.log(err);
+       return response.status(500).end('error');
        
-     };
-     console.log(data)
-     response.status(200).json(data[0])
+     }
+     console.log(data);
+     response.status(200).json(data[0]);
     
-  })
+  });
+  } else {
+    return response.status(400).json({error: 'Please send vaild data!'});
   }
   
-})
+});
+
+app.get('*', function(request, response) {
+ 
+ response.sendFile(path + '/client/index.html');
+});
+
+
+//////////////////////// test /////////////////////////
+
 // app.post("/testfind", function (request, response) {
 //   response.writeHead(200, { 'Content-Type': 'application/json' });
 //   var post = request.body;
@@ -178,13 +197,6 @@ app.post('/getonepoll', function(request, response) {
   
 // });
 
-app.get('*', function(request, response) {
- 
- response.sendFile(path + '/client/index.html');
-});
-
-
-//////////////////////// test /////////////////////////
 //app.use(express.static(path.resolve(__dirname, 'test')));
 //app.get('/',
 // 		isLoggedIn, function (req, res) {

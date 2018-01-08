@@ -1,7 +1,3 @@
-// # SimpleServer
-//
-// A simple chat server using Socket.IO, Express, and Async.
-//
 var http = require('http');
 var path = require('path');
 // var async = require('async');
@@ -48,8 +44,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(express.static(path.resolve(__dirname, 'client')));
-app.use('/css',express.static(path.join(__dirname, '/client/css')));
+app.use(express.static(path.resolve(__dirname, '../client')));
+app.use('/css',express.static(path.join(__dirname, '../client/css')));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./configs/PassportConfig.js')(app, passport, Account);

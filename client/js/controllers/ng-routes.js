@@ -6,6 +6,10 @@ app.config(function($routeProvider,$locationProvider) {
         access: {restricted: false}
 
     })
+    .when("/about", {
+        templateUrl : "templates/about.html",
+        access: { restricted: false }
+    })
     .when("/new", {
         templateUrl : "templates/new.html",
         controller: 'newPollController',
